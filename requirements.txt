@@ -15,7 +15,7 @@ defusedxml==0.7.1
 dnspython==2.8.0
 email-validator==2.3.0
 fastapi==0.128.0
-Flask==3.1.2
+Flask
 flask-cors==6.0.2
 Flask-Login==0.6.3
 Flask-Mail==0.10.0
