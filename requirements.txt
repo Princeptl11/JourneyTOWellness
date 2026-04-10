@@ -1,2 +1,4 @@
 Flask
-# Other dependencies...
+requests
+numpy
+pandas
