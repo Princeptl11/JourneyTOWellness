@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-12">
+
+    <!-- Emergency Banner -->
+    <div
+        class="glass-card bg-rose-500/10 border-rose-200/50 shadow-lg shadow-rose-500/10 rounded-2xl p-6 text-center border-l-4 border-l-rose-500 animate-pulse-slow">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-rose-800">
+            <svg class="w-8 h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                </path>
+            </svg>
+            <p class="font-bold text-lg">If you are in immediate danger, please call emergency services (911/999) or go
+                to the nearest hospital immediately.</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="text-center space-y-4">
+        <h1 class="text-5xl font-black text-slate-800 tracking-tight">You Are Not Alone.</h1>
+        <p class="text-xl text-slate-600">We are here to help you navigate through difficult times.</p>
+    </div>
+
+    <!-- Breathing Exercise Section -->
+    <div class="glass-card rounded-3xl p-12 text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-teal-50/50 to-transparent pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col items-center">
+            <h2 class="text-2xl font-bold text-teal-800 mb-2">4-7-8 Breathing Technique</h2>
+            <p class="text-slate-500 mb-10">Inhale for 4s, Hold for 7s, Exhale for 8s.</p>
+
+            <!-- Breathing Circle -->
+            <div class="relative w-64 h-64 flex items-center justify-center mb-8">
+                <!-- Outer scaling circle -->
+                <div class="absolute inset-0 bg-teal-200/30 rounded-full animate-breath-circle"></div>
+                <!-- Middle scaling circle -->
+                <div class="absolute inset-4 bg-teal-300/30 rounded-full animate-breath-circle animation-delay-200">
+                </div>
+                <!-- Core circle -->
+                <div
+                    class="relative w-32 h-32 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-full shadow-xl flex items-center justify-center text-white font-bold text-xl z-10 animate-pulse-slow">
+                    <span id="breath-text">Inhale</span>
+                </div>
+            </div>
+
+            <button id="toggle-breath"
+                class="px-8 py-3 bg-slate-800 text-white rounded-full font-bold shadow-lg hover:bg-slate-700 transition-transform active:scale-95">
+                Start/Stop
+            </button>
+        </div>
+    </div>
+
+    <!-- Zen Room included -->
+    <div>
+        <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+            <span class="w-8 h-1 bg-teal-500 rounded-full"></span>
+            Relaxation & Mindfulness
+        </h2>
+        <p class="text-slate-600 mb-6 font-medium">Curated relaxation techniques and sounds to help you disconnect and unwind.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Box Breathing -->
+            <div class="bg-white/30 backdrop-blur-md border border-white/50 shadow-xl shadow-teal-500/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 lg:col-span-1">
+                <div class="h-2 w-full bg-gradient-to-r from-teal-400 to-emerald-400"></div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <span class="text-2xl drop-shadow-sm">😮‍💨</span> Box Breathing
+                    </h3>
+                    <p class="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-2">A powerful breathing technique to instantly lower your heart rate and reduce stress.</p>
+                    
+                    <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-inner ring-1 ring-black/5 bg-slate-100">
+                        <iframe id="video1" class="yt-video absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/tEmt1Znux58?rel=0&enablejsapi=1" title="Box Breathing Technique" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calming Music -->
+            <div class="bg-white/30 backdrop-blur-md border border-white/50 shadow-xl shadow-indigo-500/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 lg:col-span-1">
+                <div class="h-2 w-full bg-gradient-to-r from-indigo-400 to-purple-400"></div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <span class="text-2xl drop-shadow-sm">🎵</span> Deep Focus & Calm
+                    </h3>
+                    <p class="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-2">Immerse yourself in gentle, ambient melodies designed for deep relaxation.</p>
+                    
+                    <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-inner ring-1 ring-black/5 bg-slate-100">
+                        <iframe id="video2" class="yt-video absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/lFcSrYw-ARY?rel=0&enablejsapi=1" title="Calming Music" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Relaxation Techniques -->
+            <div class="bg-white/30 backdrop-blur-md border border-white/50 shadow-xl shadow-amber-500/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 lg:col-span-1 md:col-span-2 lg:col-span-1">
+                <div class="h-2 w-full bg-gradient-to-r from-amber-400 to-orange-400"></div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <span class="text-2xl drop-shadow-sm">🧘‍♀️</span> Body Relaxation
+                    </h3>
+                    <p class="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-2">A guided session to systematically release physical tension from your body.</p>
+                    
+                    <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-inner ring-1 ring-black/5 bg-slate-100">
+                        <iframe id="video3" class="yt-video absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/inpok4MKVLM?rel=0&enablejsapi=1" title="Progressive Muscle Relaxation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Helplines Grid -->
+    <div>
+        <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+            <span class="w-8 h-1 bg-teal-500 rounded-full"></span>
+            Global Helplines
+        </h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- USA -->
+            <div class="glass-card p-6 rounded-2xl border-t-4 border-t-teal-500 hover:shadow-xl transition-all">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🇺🇸</span>
+                    <h3 class="font-bold text-slate-700">USA</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-3">Crisis Lifeline</p>
+                <a href="tel:988" class="text-2xl font-black text-teal-600 block hover:underline mb-2">988</a>
+                <p class="text-xs text-slate-400">Available 24/7</p>
+            </div>
+
+            <!-- UK -->
+            <div class="glass-card p-6 rounded-2xl border-t-4 border-t-indigo-500 hover:shadow-xl transition-all">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🇬🇧</span>
+                    <h3 class="font-bold text-slate-700">UK</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-3">Samaritans</p>
+                <a href="tel:116123" class="text-2xl font-black text-indigo-600 block hover:underline mb-2">116 123</a>
+                <p class="text-xs text-slate-400">Free 24-hour support</p>
+            </div>
+
+            <!-- India -->
+            <div class="glass-card p-6 rounded-2xl border-t-4 border-t-orange-500 hover:shadow-xl transition-all">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🇮🇳</span>
+                    <h3 class="font-bold text-slate-700">India</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-3">Kiran Helpline</p>
+                <a href="tel:18005990019" class="text-xl font-black text-orange-600 block hover:underline mb-2">1800 599
+                    0019</a>
+                <p class="text-xs text-slate-400">Govt Mental Health Rehab</p>
+            </div>
+
+            <!-- Canada -->
+            <div class="glass-card p-6 rounded-2xl border-t-4 border-t-rose-500 hover:shadow-xl transition-all">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🇨🇦</span>
+                    <h3 class="font-bold text-slate-700">Canada</h3>
+                </div>
+                <p class="text-sm text-slate-500 mb-3">Crisis Services</p>
+                <a href="tel:18334564566"
+                    class="text-xl font-black text-rose-600 block hover:underline mb-2">1-833-456-4566</a>
+                <p class="text-xs text-slate-400">Available 24/7</p>
+            </div>
+        </div>
+
+        <!-- Global Search Button -->
+        <div class="mt-10 text-center">
+            <p class="text-slate-500 mb-4">Don't see your country?</p>
+            <a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 bg-slate-800 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-slate-700 hover:-translate-y-1 transition-all">
+                <span>Find a Helpline Worldwide</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Breathing Animation Keyframes */
+    /* Total cycle: 19s (4s Inhale, 7s Hold, 8s Exhale) */
+    @keyframes breath {
+        0% {
+            transform: scale(1);
+        }
+
+        /* Start */
+        21% {
+            transform: scale(1.5);
+        }
+
+        /* End of Inhale (4s / 19s ≈ 21%) */
+        58% {
+            transform: scale(1.5);
+        }
+
+        /* End of Hold (11s / 19s ≈ 58%) */
+        100% {
+            transform: scale(1);
+        }
+
+        /* End of Exhale */
+    }
+
+    .animate-breath-circle {
+        animation: breath 19s infinite ease-in-out;
+        animation-play-state: paused;
+    }
+
+    .animate-pulse-slow {
+        animation: pulse 3s infinite;
+    }
+</style>
+
+<script>
+    const circle = document.querySelectorAll('.animate-breath-circle');
+    const text = document.getElementById('breath-text');
+    const toggleBtn = document.getElementById('toggle-breath');
+    let isBreathing = false;
+    let breathInterval;
+
+    function breathCycle() {
+        text.textContent = "Inhale...";
+        setTimeout(() => {
+            if (isBreathing) text.textContent = "Hold...";
+        }, 4000);
+        setTimeout(() => {
+            if (isBreathing) text.textContent = "Exhale...";
+        }, 11000);
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        isBreathing = !isBreathing;
+
+        if (isBreathing) {
+            circle.forEach(c => c.style.animationPlayState = 'running');
+            toggleBtn.textContent = "Stop";
+            toggleBtn.classList.remove('bg-slate-800');
+            toggleBtn.classList.add('bg-rose-500');
+
+            breathCycle();
+            breathInterval = setInterval(breathCycle, 19000);
+        } else {
+            circle.forEach(c => c.style.animationPlayState = 'paused');
+            toggleBtn.textContent = "Start";
+            toggleBtn.classList.remove('bg-rose-500');
+            toggleBtn.classList.add('bg-slate-800');
+
+            clearInterval(breathInterval);
+            text.textContent = "Ready";
+        }
+    });
+
+    // YouTube IFrame API integration to ensure only one video plays at a time
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var players = [];
+    function onYouTubeIframeAPIReady() {
+        var iframes = document.querySelectorAll('.yt-video');
+        iframes.forEach(function(iframe) {
+            players.push(new YT.Player(iframe.id, {
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            }));
+        });
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+            // Stop/pause all other players
+            players.forEach(function(player) {
+                if (player != event.target && typeof player.pauseVideo === 'function') {
+                    player.pauseVideo();
+                }
+            });
+        }
+    }
+</script>
+{% endblock %}

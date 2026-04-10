@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    <!-- Back Button -->
+    <a href="{{ url_for('dashboard') }}"
+        class="inline-flex items-center gap-2 text-slate-500 hover:text-teal-600 font-bold text-sm transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+        </svg>
+        Back to Dashboard
+    </a>
+
+    <div class="glass-card rounded-3xl p-8 md:p-10 shadow-xl border border-white/60 relative overflow-hidden">
+        <!-- Edit Form -->
+        <h1 class="text-3xl font-bold text-slate-800 mb-6">Edit Entry</h1>
+
+        <form method="POST" class="space-y-8" id="edit-form">
+            <!-- Date Display -->
+            <div class="text-slate-400 font-medium text-sm">
+                Created on {{ entry.entry_date.strftime('%B %d, %Y at %I:%M %p') }}
+            </div>
+
+            <!-- Title Input -->
+            <div>
+                <label for="title"
+                    class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Title</label>
+                <input type="text" id="title" name="title" value="{{ entry.title }}"
+                    class="w-full px-6 py-4 bg-slate-50/50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-teal-500 rounded-2xl transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-inner block text-lg"
+                    placeholder="Give your entry a title...">
+            </div>
+
+            <!-- Mood Selection (Multiple) -->
+            <div>
+                <label class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-4">How were you
+                    feeling? <span class="text-slate-300 font-normal normal-case">(Select one or more)</span></label>
+                <div class="flex flex-wrap gap-4" id="mood-pills">
+                    {% set entry_moods = entry.mood.split(', ') %}
+                    {% for mood_option in ['Happy', 'Calm', 'Neutral', 'Anxious', 'Sad', 'Excited', 'Grateful', 'Tired',
+                    'Angry', 'Hopeful', 'Stressed', 'Loved'] %}
+                    {% set mood_emojis = {'Happy': '😁', 'Calm': '😌', 'Neutral': '😐', 'Anxious': '😰', 'Sad': '😢',
+                    'Excited': '🤩', 'Grateful': '🙏', 'Tired': '😴', 'Angry': '😡', 'Hopeful': '🌈', 'Stressed': '😩',
+                    'Loved': '🥰'} %}
+                    {% set mood_bg = {'Happy': 'bg-amber-100', 'Calm': 'bg-emerald-100', 'Neutral': 'bg-slate-200',
+                    'Anxious': 'bg-orange-100', 'Sad': 'bg-blue-100', 'Excited': 'bg-yellow-100', 'Grateful':
+                    'bg-pink-100',
+                    'Tired': 'bg-gray-100', 'Angry': 'bg-red-100', 'Hopeful': 'bg-cyan-100', 'Stressed':
+                    'bg-violet-100', 'Loved': 'bg-rose-100'} %}
+                    {% set mood_text = {'Happy': 'text-amber-700', 'Calm': 'text-emerald-700', 'Neutral':
+                    'text-slate-700', 'Anxious': 'text-orange-700', 'Sad': 'text-blue-700', 'Excited':
+                    'text-yellow-700',
+                    'Grateful': 'text-pink-700', 'Tired': 'text-gray-700', 'Angry': 'text-red-700', 'Hopeful':
+                    'text-cyan-700',
+                    'Stressed': 'text-violet-700', 'Loved': 'text-rose-700'} %}
+                    {% set mood_border = {'Happy': 'border-amber-200', 'Calm': 'border-emerald-200', 'Neutral':
+                    'border-slate-300', 'Anxious': 'border-orange-200', 'Sad': 'border-blue-200', 'Excited':
+                    'border-yellow-200',
+                    'Grateful': 'border-pink-200', 'Tired': 'border-gray-200', 'Angry': 'border-red-200', 'Hopeful':
+                    'border-cyan-200',
+                    'Stressed': 'border-violet-200', 'Loved': 'border-rose-200'} %}
+                    {% set is_selected = mood_option in entry_moods %}
+
+                    <label class="cursor-pointer mood-pill" data-color-bg="{{ mood_bg[mood_option] }}"
+                        data-color-text="{{ mood_text[mood_option] }}"
+                        data-color-border="{{ mood_border[mood_option] }}">
+                        <input type="checkbox" name="mood" value="{{ mood_option }}" class="sr-only" {% if is_selected
+                            %}checked{% endif %}>
+                        <div
+                            class="px-6 py-3 rounded-2xl font-bold transition-all hover:bg-slate-100 flex items-center gap-2 {% if is_selected %}{{ mood_bg[mood_option] }} {{ mood_text[mood_option] }} {{ mood_border[mood_option] }} shadow-md border{% else %}bg-slate-50 border border-slate-200 text-slate-500 shadow-sm{% endif %}">
+                            <span>{{ mood_emojis[mood_option] }}</span> {{ mood_option }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p id="mood-error" class="text-rose-500 text-sm mt-2 hidden">Please select at least one mood.</p>
+            </div>
+
+            <!-- Content Area -->
+            <div>
+                <label for="content" class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Your
+                    Thoughts</label>
+                <textarea id="content" name="content" rows="10"
+                    class="w-full px-6 py-5 bg-slate-50/50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-teal-500 rounded-2xl transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-inner block text-lg resize-none"
+                    required>{{ entry.content }}</textarea>
+            </div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                <!-- Delete Button -->
+                <button type="button"
+                    onclick="if(confirm('Are you sure you want to delete this entry? This action cannot be undone.')) { document.getElementById('delete-form').submit(); }"
+                    class="text-rose-500 hover:text-rose-600 font-bold text-sm px-4 py-2 rounded-xl hover:bg-rose-50 transition-colors flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                    Delete Entry
+                </button>
+
+                <!-- Save Button -->
+                <button type="submit"
+                    class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-3 px-8 rounded-2xl shadow-lg shadow-teal-500/30 hover:shadow-teal-500/40 transform hover:-translate-y-1 transition-all duration-200 flex items-center gap-2">
+                    <span>Save Changes</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+
+        <!-- Hidden Delete Form -->
+        <form id="delete-form" action="{{ url_for('delete_entry', entry_id=entry.entry_id) }}" method="POST"
+            class="hidden">
+        </form>
+    </div>
+</div>
+
+<script>
+    // Mood Pill Toggle Logic
+    document.querySelectorAll('.mood-pill').forEach(pill => {
+        const checkbox = pill.querySelector('input[type="checkbox"]');
+        const div = pill.querySelector('div');
+        const bgClass = pill.dataset.colorBg;
+        const textClass = pill.dataset.colorText;
+        const borderClass = pill.dataset.colorBorder;
+
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                div.classList.remove('bg-slate-50', 'border-slate-200', 'text-slate-500', 'shadow-sm');
+                div.classList.add(bgClass, textClass, borderClass, 'shadow-md');
+            } else {
+                div.classList.remove(bgClass, textClass, borderClass, 'shadow-md');
+                div.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-500', 'shadow-sm');
+            }
+            document.getElementById('mood-error').classList.add('hidden');
+        });
+    });
+
+    // Form Validation: require at least one mood
+    document.getElementById('edit-form').addEventListener('submit', function (e) {
+        const checked = document.querySelectorAll('input[name="mood"]:checked');
+        if (checked.length === 0) {
+            e.preventDefault();
+            document.getElementById('mood-error').classList.remove('hidden');
+        }
+    });
+</script>
+{% endblock %}

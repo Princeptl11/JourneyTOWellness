@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-12 px-4 relative min-h-[60vh] flex flex-col justify-center">
+    <!-- Progress Indicator -->
+    <div class="absolute top-0 left-0 w-full mb-8">
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest" id="step-counter">Step 1 of 5</span>
+            <button type="button" id="skip-btn" class="text-xs font-bold text-teal-600 hover:text-teal-700 uppercase tracking-widest hidden" onclick="skipToDashboard()">Skip</button>
+        </div>
+        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-teal-400 to-emerald-500 transition-all duration-500 ease-out" style="width: 20%;"></div>
+        </div>
+    </div>
+
+    <!-- Onboarding Form -->
+    <form id="onboarding-form" method="POST" action="{{ url_for('onboarding') }}">
+        
+        <!-- Welcome Screen -->
+        <div id="screen-0" class="quiz-screen text-center transition-all duration-500 transform opacity-100 translate-y-0 relative z-10">
+            <div class="mb-8 relative inline-block">
+                <div class="absolute -inset-4 bg-teal-100/50 rounded-full blur-2xl z-0"></div>
+                <div class="w-24 h-24 bg-white rounded-3xl shadow-xl shadow-teal-500/20 flex items-center justify-center transform rotate-12 relative z-10 mx-auto">
+                    <span class="text-5xl">👋</span>
+                </div>
+            </div>
+            <h1 class="text-4xl font-black text-slate-800 tracking-tight mb-4 text-balance">Welcome to your journey.</h1>
+            <p class="text-lg text-slate-500 mb-10 max-w-md mx-auto text-balance">Let's take a quick 5-question quiz to understand what's on your mind. We'll use this to personalize your experience from day one.</p>
+            <button type="button" class="btn-next bg-gradient-to-r from-slate-800 to-slate-900 text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-slate-900/20 hover:shadow-slate-900/40 hover:-translate-y-1 transition-all">Begin Quiz</button>
+        </div>
+
+        <!-- Question 1: Work -->
+        <div id="screen-1" class="quiz-screen text-center transition-all duration-500 transform opacity-0 translate-y-8 hidden absolute inset-0 flex-col justify-center pointer-events-none">
+            <div class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-6">
+                <span class="text-3xl">💼</span>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-3">Work & Career</h2>
+            <p class="text-slate-500 mb-10 text-balance">Is work a significant source of stress for you right now?</p>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                <label class="quiz-option cursor-pointer group">
+                    <input type="checkbox" name="stress_triggers" value="Work" class="sr-only trigger-checkbox">
+                    <div class="glass-card p-6 rounded-2xl border-2 border-transparent transition-all group-hover:border-teal-200 group-hover:bg-white flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center transition-colors group-hover:bg-teal-50 toggle-bg">
+                            <svg class="w-6 h-6 text-slate-300 toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-600">Yes, it is</span>
+                    </div>
+                </label>
+                <div class="quiz-btn-no glass-card p-6 rounded-2xl border-2 border-transparent transition-all hover:bg-slate-50 cursor-pointer flex flex-col items-center gap-3 justify-center text-slate-400 font-bold">
+                    Not really
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 2: Relationships -->
+        <div id="screen-2" class="quiz-screen text-center transition-all duration-500 transform opacity-0 translate-y-8 hidden absolute inset-0 flex-col justify-center pointer-events-none">
+            <div class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-6">
+                <span class="text-3xl">❤️</span>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-3">Relationships</h2>
+            <p class="text-slate-500 mb-10 text-balance">Are you feeling tension in your relationships or social life?</p>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                <label class="quiz-option cursor-pointer group">
+                    <input type="checkbox" name="stress_triggers" value="Relationships" class="sr-only trigger-checkbox">
+                    <div class="glass-card p-6 rounded-2xl border-2 border-transparent transition-all group-hover:border-rose-200 group-hover:bg-white flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center transition-colors group-hover:bg-rose-50 toggle-bg">
+                            <svg class="w-6 h-6 text-slate-300 toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-600">Yes, I am</span>
+                    </div>
+                </label>
+                <div class="quiz-btn-no glass-card p-6 rounded-2xl border-2 border-transparent transition-all hover:bg-slate-50 cursor-pointer flex flex-col items-center gap-3 justify-center text-slate-400 font-bold">
+                    Doing fine
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 3: Health -->
+        <div id="screen-3" class="quiz-screen text-center transition-all duration-500 transform opacity-0 translate-y-8 hidden absolute inset-0 flex-col justify-center pointer-events-none">
+            <div class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-6">
+                <span class="text-3xl">🏃‍♀️</span>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-3">Health & Fitness</h2>
+            <p class="text-slate-500 mb-10 text-balance">Is your physical health or fitness currently a worry?</p>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                <label class="quiz-option cursor-pointer group">
+                    <input type="checkbox" name="stress_triggers" value="Health" class="sr-only trigger-checkbox">
+                    <div class="glass-card p-6 rounded-2xl border-2 border-transparent transition-all group-hover:border-blue-200 group-hover:bg-white flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center transition-colors group-hover:bg-blue-50 toggle-bg">
+                            <svg class="w-6 h-6 text-slate-300 toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-600">Yes, it is</span>
+                    </div>
+                </label>
+                <div class="quiz-btn-no glass-card p-6 rounded-2xl border-2 border-transparent transition-all hover:bg-slate-50 cursor-pointer flex flex-col items-center gap-3 justify-center text-slate-400 font-bold">
+                    Feeling good
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 4: Finances -->
+        <div id="screen-4" class="quiz-screen text-center transition-all duration-500 transform opacity-0 translate-y-8 hidden absolute inset-0 flex-col justify-center pointer-events-none">
+            <div class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-6">
+                <span class="text-3xl">💸</span>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-3">Finances</h2>
+            <p class="text-slate-500 mb-10 text-balance">Are money matters causing you anxiety lately?</p>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                <label class="quiz-option cursor-pointer group">
+                    <input type="checkbox" name="stress_triggers" value="Finances" class="sr-only trigger-checkbox">
+                    <div class="glass-card p-6 rounded-2xl border-2 border-transparent transition-all group-hover:border-amber-200 group-hover:bg-white flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center transition-colors group-hover:bg-amber-50 toggle-bg">
+                            <svg class="w-6 h-6 text-slate-300 toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-600">Yes, they are</span>
+                    </div>
+                </label>
+                <div class="quiz-btn-no glass-card p-6 rounded-2xl border-2 border-transparent transition-all hover:bg-slate-50 cursor-pointer flex flex-col items-center gap-3 justify-center text-slate-400 font-bold">
+                    I'm okay
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 5: Sleep -->
+        <div id="screen-5" class="quiz-screen text-center transition-all duration-500 transform opacity-0 translate-y-8 hidden absolute inset-0 flex-col justify-center pointer-events-none">
+            <div class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-6">
+                <span class="text-3xl">🌙</span>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-3">Sleep</h2>
+            <p class="text-slate-500 mb-10 text-balance">Are you struggling with poor sleep or insomnia?</p>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                <label class="quiz-option cursor-pointer group">
+                    <input type="checkbox" name="stress_triggers" value="Sleep" class="sr-only trigger-checkbox">
+                    <div class="glass-card p-6 rounded-2xl border-2 border-transparent transition-all group-hover:border-indigo-200 group-hover:bg-white flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center transition-colors group-hover:bg-indigo-50 toggle-bg">
+                            <svg class="w-6 h-6 text-slate-300 toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <span class="font-bold text-slate-600">Yes, unfortunately</span>
+                    </div>
+                </label>
+                <div class="quiz-btn-no glass-card p-6 rounded-2xl border-2 border-transparent transition-all hover:bg-slate-50 cursor-pointer flex flex-col items-center gap-3 justify-center text-slate-400 font-bold">
+                    Sleeping well
+                </div>
+            </div>
+        </div>
+        
+    </form>
+</div>
+
+<script>
+    let currentScreen = 0;
+    const totalScreens = 5;
+
+    function goToScreen(index) {
+        // Hide all screens
+        document.querySelectorAll('.quiz-screen').forEach((screen, i) => {
+            if (i === index) {
+                // Show current screen
+                screen.classList.remove('hidden', 'opacity-0', 'translate-y-8', 'pointer-events-none', 'absolute', 'inset-0');
+                screen.classList.add('opacity-100', 'translate-y-0', 'relative', 'z-10');
+                // Ensure flex column context remains
+                if (i > 0) screen.classList.add('flex');
+            } else {
+                // Hide others
+                screen.classList.remove('opacity-100', 'translate-y-0', 'relative', 'z-10', 'flex');
+                screen.classList.add('opacity-0', 'translate-y-8', 'pointer-events-none', 'absolute', 'inset-0', 'hidden');
+            }
+        });
+
+        // Update progress bar
+        if (index > 0) {
+            document.getElementById('progress-bar').style.width = `${(index / totalScreens) * 100}%`;
+            document.getElementById('step-counter').innerText = `Step ${index} of ${totalScreens}`;
+            document.getElementById('skip-btn').classList.remove('hidden');
+        } else {
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('step-counter').innerText = 'Getting Started';
+            document.getElementById('skip-btn').classList.add('hidden');
+        }
+    }
+
+    function advance() {
+        if (currentScreen < totalScreens) {
+            currentScreen++;
+            goToScreen(currentScreen);
+        } else {
+            document.getElementById('onboarding-form').submit();
+        }
+    }
+
+    function skipToDashboard() {
+        // Optionally pass empty triggers, or just submit current state
+        document.getElementById('onboarding-form').submit();
+    }
+
+    // Attach click events
+    document.querySelector('#screen-0 .btn-next').addEventListener('click', advance);
+
+    document.querySelectorAll('.quiz-option').forEach(option => {
+        const checkbox = option.querySelector('.trigger-checkbox');
+        const icon = option.querySelector('.toggle-icon');
+        const bg = option.querySelector('.toggle-bg');
+        const card = option.querySelector('.glass-card');
+        
+        // Define color active states based on parent screen
+        const activeColorBg = option.closest('#screen-1') ? 'bg-teal-100' :
+                              option.closest('#screen-2') ? 'bg-rose-100' :
+                              option.closest('#screen-3') ? 'bg-blue-100' :
+                              option.closest('#screen-4') ? 'bg-amber-100' : 'bg-indigo-100';
+
+        const activeColorText = option.closest('#screen-1') ? 'text-teal-600' :
+                                option.closest('#screen-2') ? 'text-rose-600' :
+                                option.closest('#screen-3') ? 'text-blue-600' :
+                                option.closest('#screen-4') ? 'text-amber-600' : 'text-indigo-600';
+                                
+        const activeBorder = option.closest('#screen-1') ? 'border-teal-400' :
+                            option.closest('#screen-2') ? 'border-rose-400' :
+                            option.closest('#screen-3') ? 'border-blue-400' :
+                            option.closest('#screen-4') ? 'border-amber-400' : 'border-indigo-400';
+
+        option.addEventListener('click', (e) => {
+            e.preventDefault(); // prevent double firing
+            // check the box
+            checkbox.checked = true;
+            
+            // Visual feedback
+            bg.classList.remove('bg-slate-50', 'group-hover:bg-teal-50', 'group-hover:bg-rose-50', 'group-hover:bg-blue-50', 'group-hover:bg-amber-50', 'group-hover:bg-indigo-50');
+            bg.classList.add(activeColorBg);
+            
+            icon.classList.remove('text-slate-300');
+            icon.classList.add(activeColorText);
+
+            card.classList.remove('border-transparent');
+            card.classList.add(activeBorder, 'bg-white');
+
+            // Wait a moment then advance
+            setTimeout(advance, 400);
+        });
+    });
+
+    // "No" buttons
+    document.querySelectorAll('.quiz-btn-no').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Uncheck the sibling checkbox just in case
+            const parent = btn.parentElement;
+            const checkbox = parent.querySelector('.trigger-checkbox');
+            if(checkbox) checkbox.checked = false;
+
+            // Simple visual feedback
+            btn.classList.add('bg-slate-100');
+            
+            setTimeout(advance, 300);
+        });
+    });
+</script>
+{% endblock %}

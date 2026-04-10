@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-10">
+
+    <!-- Top Section: Welcome & Streak -->
+    <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Welcome Card -->
+        <div
+            class="lg:col-span-2 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
+            <!-- Decorative Background -->
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none">
+            </div>
+            <div class="relative z-10">
+                {% if is_new_user %}
+                <h1 class="text-3xl font-bold mb-2">Welcome, {{ current_user.username }}! 🎉</h1>
+                <p class="text-teal-50 text-lg font-light mb-6">"Your wellness journey starts here. Let's begin!"</p>
+                {% else %}
+                <h1 class="text-3xl font-bold mb-2">Welcome Back, {{ current_user.username }}!</h1>
+                <p class="text-teal-50 text-lg font-light mb-6">"Identify your emotions to master them."</p>
+                {% endif %}
+
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-teal-200 mb-1">Daily Prompt</h3>
+                    <p class="text-xl font-medium leading-relaxed">{{ daily_prompt }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Streak Card -->
+        <div
+            class="glass-card rounded-3xl p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-teal-50/50 to-transparent pointer-events-none"></div>
+            <div class="relative z-10">
+                <div
+                    class="w-16 h-16 bg-gradient-to-tr from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg transform rotate-3 mx-auto">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-3xl font-bold text-slate-800 mb-1">{{ streak }} Days</h3>
+                <p class="text-slate-500 font-medium text-sm">Current Streak</p>
+                <p class="text-xs text-slate-400 mt-4">Keep it up! 🌟</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personalized Tip Section -->
+    {% if personalized_tip %}
+    <div class="glass-card rounded-3xl p-8 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100 flex gap-6 items-center shadow-lg transform transition hover:scale-[1.01]">
+        <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center flex-shrink-0 text-3xl">
+            {% set trigger_emoji = {'Work': '💼', 'Relationships': '❤️', 'Health': '🏃‍♀️', 'Finances': '💸', 'Sleep': '🌙'} %}
+            {{ trigger_emoji.get(personalized_tip.trigger, '💡') }}
+        </div>
+        <div>
+            <h3 class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">Focus: {{ personalized_tip.trigger }}</h3>
+            <p class="text-slate-800 text-lg font-medium leading-relaxed">{{ personalized_tip.text }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+
+
+    <!-- Main Input Section -->
+    <div class="glass-card rounded-3xl p-8 md:p-10 shadow-xl border border-white/60">
+        <form method="POST" class="space-y-8">
+            <!-- Mood Selection Pills (Multiple Selection) -->
+            <div>
+                <label class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-4">How are you
+                    feeling? <span class="text-slate-300 font-normal normal-case">(Select one or more)</span></label>
+                <div class="flex flex-wrap gap-4" id="mood-pills">
+                    <!-- Happy -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-amber-100"
+                        data-color-text="text-amber-700" data-color-border="border-amber-200">
+                        <input type="checkbox" name="mood" value="Happy" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😁</span> Happy
+                        </div>
+                    </label>
+                    <!-- Calm -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-emerald-100"
+                        data-color-text="text-emerald-700" data-color-border="border-emerald-200">
+                        <input type="checkbox" name="mood" value="Calm" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😌</span> Calm
+                        </div>
+                    </label>
+                    <!-- Neutral -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-slate-200"
+                        data-color-text="text-slate-700" data-color-border="border-slate-300">
+                        <input type="checkbox" name="mood" value="Neutral" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😐</span> Neutral
+                        </div>
+                    </label>
+                    <!-- Anxious -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-orange-100"
+                        data-color-text="text-orange-700" data-color-border="border-orange-200">
+                        <input type="checkbox" name="mood" value="Anxious" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😰</span> Anxious
+                        </div>
+                    </label>
+                    <!-- Sad -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-blue-100" data-color-text="text-blue-700"
+                        data-color-border="border-blue-200">
+                        <input type="checkbox" name="mood" value="Sad" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😢</span> Sad
+                        </div>
+                    </label>
+                    <!-- Excited -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-yellow-100"
+                        data-color-text="text-yellow-700" data-color-border="border-yellow-200">
+                        <input type="checkbox" name="mood" value="Excited" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>🤩</span> Excited
+                        </div>
+                    </label>
+                    <!-- Grateful -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-pink-100" data-color-text="text-pink-700"
+                        data-color-border="border-pink-200">
+                        <input type="checkbox" name="mood" value="Grateful" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>🙏</span> Grateful
+                        </div>
+                    </label>
+                    <!-- Tired -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-gray-100" data-color-text="text-gray-700"
+                        data-color-border="border-gray-200">
+                        <input type="checkbox" name="mood" value="Tired" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😴</span> Tired
+                        </div>
+                    </label>
+                    <!-- Angry -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-red-100" data-color-text="text-red-700"
+                        data-color-border="border-red-200">
+                        <input type="checkbox" name="mood" value="Angry" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😡</span> Angry
+                        </div>
+                    </label>
+                    <!-- Hopeful -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-cyan-100" data-color-text="text-cyan-700"
+                        data-color-border="border-cyan-200">
+                        <input type="checkbox" name="mood" value="Hopeful" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>🌈</span> Hopeful
+                        </div>
+                    </label>
+                    <!-- Stressed -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-violet-100"
+                        data-color-text="text-violet-700" data-color-border="border-violet-200">
+                        <input type="checkbox" name="mood" value="Stressed" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😩</span> Stressed
+                        </div>
+                    </label>
+                    <!-- Loved -->
+                    <label class="cursor-pointer mood-pill" data-color-bg="bg-rose-100" data-color-text="text-rose-700"
+                        data-color-border="border-rose-200">
+                        <input type="checkbox" name="mood" value="Loved" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>🥰</span> Loved
+                        </div>
+                    </label>
+                </div>
+                <p id="mood-error" class="text-rose-500 text-sm mt-2 hidden">Please select at least one mood.</p>
+            </div>
+
+            <!-- Title Input -->
+            <div>
+                <label for="title" class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Title
+                    <span class="text-slate-300 font-normal normal-case">(Optional)</span></label>
+                <input type="text" id="title" name="title"
+                    class="w-full px-6 py-4 bg-slate-50/50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-teal-500 rounded-2xl transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-inner block text-lg"
+                    placeholder="Give your entry a title...">
+            </div>
+
+            <!-- Content Area with Voice Input -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-end">
+                    <label for="content" class="block text-slate-500 text-xs font-bold uppercase tracking-wider">Your
+                        Thoughts</label>
+                    <button type="button" id="start-recording"
+                        class="text-teal-600 hover:text-teal-700 text-xs font-bold flex items-center gap-1 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z">
+                            </path>
+                        </svg>
+                        Voice Input
+                    </button>
+                </div>
+                <div class="relative">
+                    <textarea id="content" name="content" rows="4"
+                        class="w-full px-6 py-5 bg-slate-50/50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-teal-500 rounded-2xl transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-inner block text-lg resize-none"
+                        placeholder="Start writing here..." required></textarea>
+                    <div id="recording-indicator"
+                        class="hidden absolute top-4 right-4 text-rose-500 animate-pulse flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm text-xs font-bold">
+                        <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+                        Recording...
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold py-4 px-10 rounded-2xl shadow-lg shadow-teal-500/30 hover:shadow-teal-500/40 transform hover:-translate-y-1 transition-all duration-200 flex items-center gap-2">
+                    <span>Save Entry</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Feed Section -->
+    <div>
+        <!-- Daily Mindful Fact -->
+        <div class="mb-8 border-l-4 border-teal-500 bg-teal-50/50 p-4 sm:p-5 rounded-r-2xl shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-start gap-4">
+                <span class="text-teal-600 text-2xl font-bold bg-teal-100 p-2 rounded-xl flex-shrink-0">💡</span>
+                <div>
+                    <h4 class="text-xs font-bold tracking-widest text-teal-800 uppercase mb-1.5 flex items-center gap-2">
+                        Daily Mindful Fact
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                        </span>
+                    </h4>
+                    <p class="text-teal-900 font-medium leading-relaxed">{{ mindful_fact }}</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 id="recent-entries" class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3 scroll-mt-24">
+            <span class="w-8 h-1 bg-teal-500 rounded-full"></span>
+            Recent Entries
+        </h2>
+
+        {% if entries %}
+        <div class="columns-1 md:columns-2 gap-8 space-y-8">
+            {% for entry in entries %}
+            {% set badge_colors = {
+            'Happy': 'bg-amber-100 text-amber-700 border-amber-200',
+            'Calm': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+            'Neutral': 'bg-slate-100 text-slate-700 border-slate-200',
+            'Anxious': 'bg-orange-100 text-orange-700 border-orange-200',
+            'Sad': 'bg-blue-100 text-blue-700 border-blue-200',
+            'Excited': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+            'Grateful': 'bg-pink-100 text-pink-700 border-pink-200',
+            'Tired': 'bg-gray-100 text-gray-700 border-gray-200',
+            'Angry': 'bg-red-100 text-red-700 border-red-200',
+            'Hopeful': 'bg-cyan-100 text-cyan-700 border-cyan-200',
+            'Stressed': 'bg-violet-100 text-violet-700 border-violet-200',
+            'Loved': 'bg-rose-100 text-rose-700 border-rose-200'
+            } %}
+            {% set badge_style = badge_colors[entry.mood] or badge_colors['Neutral'] %}
+
+            <div
+                class="break-inside-avoid glass-card rounded-3xl p-8 hover:border-teal-200/60 transition-all duration-300 hover:shadow-xl group relative">
+
+                <!-- Action Buttons (Top Right) -->
+                <div
+                    class="absolute top-8 right-8 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <a href="{{ url_for('entry', entry_id=entry.entry_id) }}"
+                        class="p-2 bg-white/80 rounded-full text-slate-400 hover:text-teal-600 hover:bg-white shadow-sm transition-all"
+                        title="Edit">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex flex-wrap gap-2">
+                        {% for mood_item in entry.mood.split(', ') %}
+                        {% set badge_style = badge_colors.get(mood_item.strip(), badge_colors['Neutral']) %}
+                        <span
+                            class="px-4 py-1.5 text-xs font-bold rounded-full uppercase tracking-wider border {{ badge_style }}">
+                            {{ mood_item.strip() }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    <span class="text-xs font-medium text-slate-400 font-mono">{{ entry.entry_date.strftime('%b %d, %Y')
+                        }}</span>
+                </div>
+
+                <a href="{{ url_for('entry', entry_id=entry.entry_id) }}" class="block group-hover:no-underline">
+                    {% if entry.title %}
+                    <h3 class="font-bold text-lg text-slate-800 mb-2 truncate">{{ entry.title }}</h3>
+                    {% endif %}
+                    <p
+                        class="text-slate-700 leading-relaxed text-lg mb-6 whitespace-pre-wrap line-clamp-4 hover:text-slate-900 transition-colors">
+                        {{ entry.content }}</p>
+                </a>
+
+                <!-- Tip Box (Conditional if available) -->
+                {% if entry.tips %}
+                <div class="bg-indigo-50 rounded-2xl p-5 border border-indigo-100 mt-6 flex gap-4">
+                    <div class="flex-shrink-0">
+                        <div
+                            class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-indigo-900 mb-1">Advice</h4>
+                        <p class="text-sm text-indigo-700 leading-relaxed">{{ entry.tips }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+
+
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass-card rounded-3xl p-16 text-center border-dashed border-2 border-slate-300">
+            <div
+                class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                    </path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-700 mb-2">No entries yet</h3>
+            <p class="text-slate-500">Your journal is waiting for your first thought.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Mood Pill Toggle Logic
+    document.querySelectorAll('.mood-pill').forEach(pill => {
+        const checkbox = pill.querySelector('input[type="checkbox"]');
+        const div = pill.querySelector('div');
+        const bgClass = pill.dataset.colorBg;
+        const textClass = pill.dataset.colorText;
+        const borderClass = pill.dataset.colorBorder;
+
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                div.classList.remove('bg-slate-50', 'border-slate-200', 'text-slate-500', 'shadow-sm');
+                div.classList.add(bgClass, textClass, borderClass, 'shadow-md');
+            } else {
+                div.classList.remove(bgClass, textClass, borderClass, 'shadow-md');
+                div.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-500', 'shadow-sm');
+            }
+            document.getElementById('mood-error').classList.add('hidden');
+        });
+    });
+
+    // Form Validation: require at least one mood
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const checked = document.querySelectorAll('input[name="mood"]:checked');
+        if (checked.length === 0) {
+            e.preventDefault();
+            document.getElementById('mood-error').classList.remove('hidden');
+        }
+    });
+
+    // Voice Input Logic
+    const startBtn = document.getElementById('start-recording');
+    const contentArea = document.getElementById('content');
+    const indicator = document.getElementById('recording-indicator');
+
+    if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        startBtn.addEventListener('click', () => {
+            recognition.start();
+            indicator.classList.remove('hidden');
+            startBtn.classList.add('text-rose-500');
+        });
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            const currentText = contentArea.value;
+            contentArea.value = currentText ? currentText + ' ' + transcript : transcript;
+            indicator.classList.add('hidden');
+            startBtn.classList.remove('text-rose-500');
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error', event.error);
+            indicator.classList.add('hidden');
+            startBtn.classList.remove('text-rose-500');
+        };
+
+        recognition.onend = () => {
+            indicator.classList.add('hidden');
+            startBtn.classList.remove('text-rose-500');
+        };
+    } else {
+        startBtn.style.display = 'none';
+        console.log('Web Speech API not supported');
+    }
+</script>
+{% endblock %}

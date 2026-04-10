@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 py-8">
+    <!-- Header -->
+    <div class="text-center animate-fade-in-up">
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-800 mb-4 flex items-center justify-center gap-3">
+            <span class="text-teal-500">✨</span> The Zen Room <span class="text-indigo-500">✨</span>
+        </h1>
+        <p class="text-base md:text-lg text-slate-600 max-w-2xl mx-auto font-medium leading-relaxed">
+            Take a deep breath and find your center. These curated relaxation techniques and sounds are here to help you disconnect and unwind from the world.
+        </p>
+    </div>
+
+    <!-- Video Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Box Breathing -->
+        <div class="bg-white/30 backdrop-blur-md border border-white/50 shadow-xl shadow-teal-500/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 lg:col-span-1">
+            <div class="h-2 w-full bg-gradient-to-r from-teal-400 to-emerald-400"></div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="text-2xl drop-shadow-sm">😮‍💨</span> Box Breathing
+                </h3>
+                <p class="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-2">A powerful breathing technique to instantly lower your heart rate and reduce stress.</p>
+                
+                <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-inner ring-1 ring-black/5 bg-slate-100">
+                    <iframe class="absolute top-0 left-0 w-full h-full" 
+                            src="https://www.youtube.com/embed/tEmt1Znux58?rel=0" 
+                            title="Box Breathing Technique" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calming Music -->
+        <div class="bg-white/30 backdrop-blur-md border border-white/50 shadow-xl shadow-indigo-500/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 lg:col-span-1">
+            <div class="h-2 w-full bg-gradient-to-r from-indigo-400 to-purple-400"></div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="text-2xl drop-shadow-sm">🎵</span> Deep Focus & Calm
+                </h3>
+                <p class="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-2">Immerse yourself in gentle, ambient melodies designed for deep relaxation.</p>
+                
+                <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-inner ring-1 ring-black/5 bg-slate-100">
+                    <iframe class="absolute top-0 left-0 w-full h-full" 
+                            src="https://www.youtube.com/embed/lFcSrYw-ARY?rel=0" 
+                            title="Calming Music" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relaxation Techniques -->
+        <div class="bg-white/30 backdrop-blur-md border border-white/50 shadow-xl shadow-amber-500/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 lg:col-span-1 md:col-span-2 lg:col-span-1">
+            <div class="h-2 w-full bg-gradient-to-r from-amber-400 to-orange-400"></div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="text-2xl drop-shadow-sm">🧘‍♀️</span> Body Relaxation
+                </h3>
+                <p class="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-2">A guided session to systematically release physical tension from your body.</p>
+                
+                <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-inner ring-1 ring-black/5 bg-slate-100">
+                    <iframe class="absolute top-0 left-0 w-full h-full" 
+                            src="https://www.youtube.com/embed/inpok4MKVLM?rel=0" 
+                            title="Progressive Muscle Relaxation" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

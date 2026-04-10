@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-10">
+    <div class="text-center mb-8">
+        <h2 class="text-4xl font-bold text-slate-800 tracking-tight mb-2">Sleep Tracker</h2>
+        <p class="text-slate-600">Monitor your rest and find patterns in your energy levels.</p>
+    </div>
+
+    <!-- Main Input Section -->
+    <div class="glass-card rounded-3xl p-8 md:p-10 shadow-xl border border-white/60">
+        <form method="POST" class="space-y-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Date Input -->
+                <div>
+                    <label for="date" class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Date</label>
+                    <input type="date" id="date" name="date" value="{{ today }}" required
+                        class="w-full px-6 py-4 bg-slate-50/50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-teal-500 rounded-2xl transition-all duration-200 text-slate-700 shadow-inner block text-lg">
+                </div>
+                
+                <!-- Hours Input -->
+                <div>
+                    <label for="hours" class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Hours Slept</label>
+                    <input type="number" id="hours" name="hours" step="0.5" min="0" max="24" required placeholder="e.g. 7.5"
+                        class="w-full px-6 py-4 bg-slate-50/50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-teal-500 rounded-2xl transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-inner block text-lg">
+                </div>
+            </div>
+
+            <!-- Quality Selection Pills (Single Selection) -->
+            <div>
+                <label class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-4">Sleep Quality</label>
+                <div class="flex flex-wrap gap-4" id="quality-pills">
+                    <!-- Excellent -->
+                    <label class="cursor-pointer quality-pill" data-color-bg="bg-emerald-100"
+                        data-color-text="text-emerald-700" data-color-border="border-emerald-200">
+                        <input type="radio" name="quality" value="Excellent" class="sr-only" required>
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>✨</span> Excellent
+                        </div>
+                    </label>
+                    <!-- Good -->
+                    <label class="cursor-pointer quality-pill" data-color-bg="bg-teal-100"
+                        data-color-text="text-teal-700" data-color-border="border-teal-200">
+                        <input type="radio" name="quality" value="Good" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>👍</span> Good
+                        </div>
+                    </label>
+                    <!-- Fair -->
+                    <label class="cursor-pointer quality-pill" data-color-bg="bg-amber-100"
+                        data-color-text="text-amber-700" data-color-border="border-amber-200">
+                        <input type="radio" name="quality" value="Fair" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>😐</span> Fair
+                        </div>
+                    </label>
+                    <!-- Poor -->
+                    <label class="cursor-pointer quality-pill" data-color-bg="bg-rose-100"
+                        data-color-text="text-rose-700" data-color-border="border-rose-200">
+                        <input type="radio" name="quality" value="Poor" class="sr-only">
+                        <div
+                            class="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 font-bold transition-all hover:bg-slate-100 flex items-center gap-2 shadow-sm">
+                            <span>🥱</span> Poor
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Notes Area -->
+            <div>
+                <label for="notes" class="block text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Notes <span class="text-slate-300 font-normal normal-case">(Optional)</span></label>
+                <textarea id="notes" name="notes" rows="3"
+                    class="w-full px-6 py-4 bg-slate-50/50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-teal-500 rounded-2xl transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-inner block text-lg resize-none"
+                    placeholder="Dreams, disruptions, or how you feel upon waking up..."></textarea>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="bg-gradient-to-r from-teal-500 to-indigo-500 hover:from-teal-600 hover:to-indigo-600 text-white font-bold py-4 px-10 rounded-2xl shadow-lg shadow-teal-500/30 hover:shadow-teal-500/40 transform hover:-translate-y-1 transition-all duration-200 flex items-center gap-2">
+                    <span>Log Sleep</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Recent Logs Section -->
+    <div>
+        <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+            <span class="w-8 h-1 bg-teal-500 rounded-full"></span>
+            Recent Sleep Logs
+        </h2>
+
+        {% if logs %}
+        <div class="space-y-4">
+            {% for log in logs %}
+            {% set badge_colors = {
+                'Excellent': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                'Good': 'bg-teal-100 text-teal-700 border-teal-200',
+                'Fair': 'bg-amber-100 text-amber-700 border-amber-200',
+                'Poor': 'bg-rose-100 text-rose-700 border-rose-200'
+            } %}
+            {% set badge_style = badge_colors[log.sleep_quality] or 'bg-slate-100 text-slate-700 border-slate-200' %}
+            
+            <div class="glass-card rounded-2xl p-6 hover:shadow-lg transition-all duration-300 flex flex-col md:flex-row gap-6 md:items-center justify-between border-l-4 border-l-teal-500">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-slate-800 font-bold text-lg">{{ log.date.strftime('%B %d, %Y') }}</span>
+                        <span class="px-3 py-1 flex items-center text-xs font-bold rounded-full uppercase tracking-wider border {{ badge_style }}">
+                            {{ log.sleep_quality }}
+                        </span>
+                    </div>
+                    {% if log.notes %}
+                    <p class="text-slate-600 text-md">{{ log.notes }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="flex items-baseline gap-1 bg-slate-50/50 px-5 py-3 rounded-2xl border border-slate-100 shadow-inner">
+                    <span class="text-3xl font-black text-slate-700">{{ log.hours_slept }}</span>
+                    <span class="text-sm font-bold text-slate-400 uppercase tracking-wider">hrs</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass-card rounded-3xl p-12 text-center border-dashed border-2 border-slate-300">
+            <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700 mb-1">No sleep logs yet</h3>
+            <p class="text-slate-500 text-sm">Start tracking your sleep to see your records here.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Quality Pill Toggle Logic (Radio behavior)
+    document.querySelectorAll('.quality-pill').forEach(pill => {
+        const radio = pill.querySelector('input[type="radio"]');
+        const div = pill.querySelector('div');
+        const bgClass = pill.dataset.colorBg;
+        const textClass = pill.dataset.colorText;
+        const borderClass = pill.dataset.colorBorder;
+
+        radio.addEventListener('change', () => {
+            // First reset all pills to default styling
+            document.querySelectorAll('.quality-pill').forEach(otherPill => {
+                const otherDiv = otherPill.querySelector('div');
+                const obgClass = otherPill.dataset.colorBg;
+                const otextClass = otherPill.dataset.colorText;
+                const oborderClass = otherPill.dataset.colorBorder;
+                otherDiv.classList.remove(obgClass, otextClass, oborderClass, 'shadow-md');
+                otherDiv.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-500', 'shadow-sm');
+            });
+
+            // Then apply active styling to the checked one
+            if (radio.checked) {
+                div.classList.remove('bg-slate-50', 'border-slate-200', 'text-slate-500', 'shadow-sm');
+                div.classList.add(bgClass, textClass, borderClass, 'shadow-md');
+            }
+        });
+    });
+</script>
+{% endblock %}

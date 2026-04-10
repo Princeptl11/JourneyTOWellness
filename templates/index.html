@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey To Wellness - Your Safe Space</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        glass: 'rgba(255, 255, 255, 0.65)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Cross-browser normalization */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            font-size: 16px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            text-rendering: optimizeLegibility;
+        }
+
+        img,
+        svg,
+        video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mesh-bg {
+            background-color: #f0fdfa;
+            background-image:
+                radial-gradient(at 0% 0%, hsla(168, 76%, 85%, 1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(245, 68%, 88%, 1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(168, 76%, 85%, 1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(245, 68%, 88%, 1) 0px, transparent 50%);
+        }
+
+        /* Responsive container padding */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="text-slate-700 mesh-bg min-h-screen relative overflow-x-hidden selection:bg-teal-200 selection:text-teal-900">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold tracking-tight text-teal-900 flex items-center gap-2">
+                <span class="bg-gradient-to-tr from-teal-500 to-indigo-500 rounded-lg p-1.5 shadow-lg">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                        </path>
+                    </svg>
+                </span>
+                JourneyToWellness
+            </a>
+
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="/" class="text-slate-600 hover:text-teal-700 transition-colors">Home</a>
+                <a href="#features" class="text-slate-600 hover:text-teal-700 transition-colors">Features</a>
+
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('zen_room') }}" class="text-slate-600 hover:text-teal-700 transition-colors">Zen Room</a>
+                <a href="{{ url_for('dashboard') }}"
+                    class="text-indigo-600 hover:text-indigo-700 font-semibold">Dashboard</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="text-slate-600 hover:text-teal-700 transition-colors">Login</a>
+                <a href="{{ url_for('register') }}"
+                    class="px-6 py-2.5 rounded-full bg-gradient-to-r from-teal-500 to-indigo-500 text-white font-bold shadow-lg shadow-teal-500/20 hover:shadow-teal-500/40 transform hover:-translate-y-0.5 transition-all duration-200">
+                    Get Started
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-teal-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white/90 backdrop-blur-md">
+            <div class="px-6 py-4 flex flex-col space-y-4">
+                <a href="/" class="text-slate-700 hover:text-teal-600 font-medium">Home</a>
+                <a href="#features" class="text-slate-700 hover:text-teal-600 font-medium">Features</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('zen_room') }}" class="text-slate-700 hover:text-teal-600 font-medium">Zen Room</a>
+                <a href="{{ url_for('dashboard') }}"
+                    class="text-indigo-600 hover:text-indigo-700 font-semibold">Dashboard</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="text-slate-700 hover:text-teal-600 font-medium">Login</a>
+                <a href="{{ url_for('register') }}" class="text-teal-600 font-bold">Get Started</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('mobile-menu-btn').addEventListener('click', function () {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+        </script>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6">
+        <div class="container mx-auto grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+
+            <!-- Text Content -->
+            <div class="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left animate-fade-in-up">
+                <h1
+                    class="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6 sm:mb-8">
+                    Your Safe Space for <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-indigo-600">Reflection.</span>
+                </h1>
+                <p class="text-base sm:text-xl text-slate-600 mb-8 sm:mb-10 leading-relaxed">
+                    Track your mental health journey with privacy and AI insights. A serene environment to understand
+                    your emotions and grow.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}"
+                        class="inline-flex justify-center items-center px-8 py-4 text-base sm:text-lg font-bold rounded-2xl text-white bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-900/20 transition-all transform hover:-translate-y-1">
+                        Go to Dashboard
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('register') }}"
+                        class="inline-flex justify-center items-center px-8 py-4 text-base sm:text-lg font-bold rounded-2xl text-white bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-900/20 transition-all transform hover:-translate-y-1">
+                        Get Started
+                    </a>
+                    <a href="{{ url_for('login') }}"
+                        class="inline-flex justify-center items-center px-8 py-4 text-base sm:text-lg font-bold rounded-2xl text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 shadow-md transition-all">
+                        Login
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Visual -->
+            <div class="relative hidden lg:block perspective-1000">
+                <!-- Decorative blurred orbs -->
+                <div
+                    class="absolute -top-20 -right-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob">
+                </div>
+                <div
+                    class="absolute -bottom-20 -left-20 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000">
+                </div>
+
+                <!-- 3D Illustration -->
+                <div class="relative z-10 transform rotate-y-12 hover:rotate-y-0 transition-transform duration-700">
+                    <img src="{{ url_for('static', filename='images/hero_3d_illustration.png') }}"
+                        alt="Mental Health Reflection 3D"
+                        class="w-full h-auto drop-shadow-2xl rounded-3xl animate-float">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Trust Badge -->
+    <section class="border-y border-white/40 bg-white/30 backdrop-blur-sm">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p class="text-lg font-semibold text-slate-500 flex justify-center items-center gap-3">
+                <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                    </path>
+                </svg>
+                100% Private & Secure. Open Source.
+            </p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 sm:py-24 relative overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-teal-100 rounded-2xl flex items-center justify-center mb-6 text-teal-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-3">Secure Encrypted Storage</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Your thoughts are encrypted at rest. We prize your anonymity and data security above all else.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                    <div
+                        class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center mb-6 text-indigo-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-3">Mood Tracking Charts</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Visualize your emotional trends over time. Identify triggers and patterns with beautiful,
+                        interactive charts.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                    <div
+                        class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 text-amber-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-3">Mood Insights</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Receive personalized insights and actionable tips based on your current mood and journal
+                        entries.
+                    </p>
+                </div>
+
+                <!-- Feature 4 (Ambient Sounds) -->
+                <div class="glass-card p-8 rounded-3xl transition-transform hover:-translate-y-2 border-teal-200 shadow-xl shadow-teal-500/10">
+                    <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 text-emerald-600">
+                        <svg class="w-8 h-8 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-indigo-600 mb-3">Ambient Therapy</h3>
+                    <p class="text-slate-600 leading-relaxed font-medium">
+                        Focus and relax with a built-in soothing soundscape player. Try it now by clicking the <strong class="text-teal-600">Audio button</strong> in the bottom left corner!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white/60 backdrop-blur-md border-t border-white/40 py-12">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="text-2xl font-bold text-teal-800 mb-4 md:mb-0">JourneyToWellness</div>
+                <div class="flex gap-8 text-sm font-medium text-slate-600">
+                    <a href="#" class="hover:text-teal-700">Privacy Policy</a>
+                    <a href="#" class="hover:text-teal-700">Terms of Service</a>
+                    <a href="#" class="hover:text-teal-700">Contact</a>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-200/60 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-500 text-sm">&copy; 2026 Journey To Wellness. Open Source.</p>
+                <p class="text-xs text-slate-400 max-w-md text-center md:text-right">
+                    <strong>Crisis Disclaimer:</strong> We are not a medical service. If you are in immediate danger or
+                    a crisis, please contact your local emergency services or a crisis lifeline immediately.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</body>
+
+</html>
